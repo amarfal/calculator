@@ -76,3 +76,32 @@ function inputDot() {
         updateDisplay();
     }
 }
+
+function setOperator(op) {
+    if (operator && waitingForSecond) {
+        operator = op;
+        return;
+    }
+
+    const current = Number(displayValue);
+
+    if (first === null) {
+        first = current;
+    } else if (!waitingForSecond) {
+        const result = operate(operator, first, current);
+        if (result === 'DIV0') {
+            displayValue = 'Nice try :)'
+            updateDisplay();
+
+            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+            return;
+        }
+        first = result;
+        displayValue = formatNumber(result);
+        updateDisplay();
+    }
+
+    operator = op;
+    waitingForSecond = true;
+    justEvaluated = false;
+}

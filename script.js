@@ -50,3 +50,29 @@ function clearAll() {
     displayValue = '0';
     updateDisplay();
 }
+
+function inputDigit(d) {
+    if (justEvaluated) {
+        first = null; operator = null; justEvaluated = false;
+        displayValue = '0';
+    }
+    if (waitingForSecond) {
+        displayValue = '0';
+        waitingForSecond = false;
+    }
+    if (displayValue === '0') displayValue = '';
+    if (displayValue.length >= 16) return;
+    displayValue += d;
+    updateDisplay();
+}
+
+function inputDot() {
+    if (waitingForSecond) {
+        displayValue = '0';
+        waitingForSecond = false;
+    }
+    if (!displayValue.includes('.')) {
+        displayValue += (displayValue === '' ? '0.' : '.');
+        updateDisplay();
+    }
+}

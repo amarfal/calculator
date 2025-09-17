@@ -34,9 +34,12 @@ let waitingForSecond = false;
 let justEvaluated = false;
 
 let displayValue = '0';
+let equationDisplay = '';
+let showingEquation = false;
 
-function updateDisplay(text = displayValue) {
-    displayEl.textContent = text;
+function updateDisplay() {
+    const displayText = showingEquation ? equationDisplay : displayValue;
+    displayEl.textContent = displayText;
     const canDot = !String(displayValue).includes('.');
     dotBtn.disabled = !canDot;
     dotBtn.style.opacity = canDot ? '1' : '.6';
@@ -48,6 +51,8 @@ function clearAll() {
     waitingForSecond = false;
     justEvaluated = false;
     displayValue = '0';
+    equationDisplay = '';
+    showingEquation = false;
     updateDisplay();
 }
 
@@ -55,6 +60,8 @@ function inputDigit(d) {
     if (justEvaluated) {
         first = null; operator = null; justEvaluated = false;
         displayValue = '0';
+        equationDisplay = '';
+        showingEquation = false;
     }
     if (waitingForSecond) {
         displayValue = '0';
@@ -63,6 +70,21 @@ function inputDigit(d) {
     if (displayValue === '0') displayValue = '';
     if (displayValue.length >= 16) return;
     displayValue += d;
+    
+    // Update equation display
+    if (first !== null && operator !== null) {
+        const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
+        if (buildingEquation.length > 16) {
+            displayValue = "I can't do that :(";
+            showingEquation = false;
+            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+        } else {
+            equationDisplay = buildingEquation;
+            showingEquation = true;
+        }
+    } else {
+        showingEquation = false;
+    }
     updateDisplay();
 }
 
@@ -73,6 +95,21 @@ function inputDot() {
     }
     if (!displayValue.includes('.')) {
         displayValue += (displayValue === '' ? '0.' : '.');
+        
+        // Update equation display
+        if (first !== null && operator !== null) {
+            const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
+            if (buildingEquation.length > 16) {
+                displayValue = "I can't do that :(";
+                showingEquation = false;
+                first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+            } else {
+                equationDisplay = buildingEquation;
+                showingEquation = true;
+            }
+        } else {
+            showingEquation = false;
+        }
         updateDisplay();
     }
 }
@@ -80,6 +117,17 @@ function inputDot() {
 function setOperator(op) {
     if (operator && waitingForSecond) {
         operator = op;
+        // Update equation display with new operator
+        const operatorEquation = `${formatNumber(first)} ${op}`;
+        if (operatorEquation.length > 16) {
+            displayValue = "I can't do that :(";
+            showingEquation = false;
+            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+        } else {
+            equationDisplay = operatorEquation;
+            showingEquation = true;
+        }
+        updateDisplay();
         return;
     }
 
@@ -91,6 +139,7 @@ function setOperator(op) {
         const result = operate(operator, first, current);
         if (result === 'DIV0') {
             displayValue = 'Nice try :)'
+            showingEquation = false;
             updateDisplay();
 
             first = null; operator = null; waitingForSecond = false; justEvaluated = true;
@@ -100,16 +149,30 @@ function setOperator(op) {
         const formattedResult = formatNumber(result);
         if (formattedResult.length > 15) {
             displayValue = "I can't do that :(";
+            showingEquation = false;
             first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+            updateDisplay();
+            return;
         } else {
             displayValue = formattedResult;
         }
-        updateDisplay();
     }
 
     operator = op;
     waitingForSecond = true;
     justEvaluated = false;
+    
+    // Show equation with operator
+    const operatorEquation = `${formatNumber(first)} ${op}`;
+    if (operatorEquation.length > 16) {
+        displayValue = "I can't do that :(";
+        showingEquation = false;
+        first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+    } else {
+        equationDisplay = operatorEquation;
+        showingEquation = true;
+    }
+    updateDisplay();
 }
 
 function equals() {
@@ -122,14 +185,26 @@ function equals() {
 
     if (result === 'DIV0') {
         displayValue = 'Nice try :)';
+        showingEquation = false;
     } else {
         const formattedResult = formatNumber(result);
         if (formattedResult.length > 15) {
             displayValue = "I can't do that :(";
+            showingEquation = false;
             first = null;
         } else {
             displayValue = formattedResult;
             first = result;
+            // Show complete equation with result
+            const fullEquation = `${expr} = ${formattedResult}`;
+            if (fullEquation.length > 16) {
+                displayValue = "I can't do that :(";
+                showingEquation = false;
+                first = null;
+            } else {
+                equationDisplay = fullEquation;
+                showingEquation = true;
+            }
         }
     }
 
@@ -147,6 +222,21 @@ function backspace() {
     if (justEvaluated || waitingForSecond) return;
     if (displayValue.length <= 1) displayValue = '0';
     else displayValue = displayValue.slice(0, -1);
+    
+    // Update equation display if we're in the middle of an equation
+    if (first !== null && operator !== null) {
+        const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
+        if (buildingEquation.length > 16) {
+            displayValue = "I can't do that :(";
+            showingEquation = false;
+            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
+        } else {
+            equationDisplay = buildingEquation;
+            showingEquation = true;
+        }
+    } else {
+        showingEquation = false;
+    }
     updateDisplay();
 }
 

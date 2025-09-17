@@ -4,9 +4,10 @@
     --screen:#494b52;
     --text:#e5e7eb;
     --accent:#2563eb;
-    --op:#8b5cf6;
-    --alt:#475569;
-    --eq:#16a34a;
+    --op:#3583e9;
+    --alt:#e06c00;
+    --eq:#21a551;
+    --log:#f9a8d4;
 }
 
 *{box-sizing:border-box}
@@ -31,7 +32,7 @@ body {
 .display {
     height: 76px;
     background: var(--screen);
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 12px 16px;
     margin-bottom: 12px;
     font-size: 34px;
@@ -41,3 +42,116 @@ body {
     overflow: hidden;
     white-space: nowrap;
 }
+
+.keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.key {
+    appearance: none;
+    border: 0;
+    border-radius: 6px;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--screen);
+    cursor: pointer;
+    transition: transform .05s ease, filter .15s ease;
+}
+
+.key:active{ transform:translateY(1px) }
+.key--op{ background: var(--op) }
+.key--eq{ background: var(--eq) }
+.key--alt{ background: var(--alt) }
+.key--wide{ grid-column: span 2 }
+.key--log{ background: var(--log) }
+
+.key:focus-visible{ outline: 2px solid #fff; outline-offset: 2px }
+
+/* ---- History modal ---- */
+.history {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  
+  .history::backdrop {
+    background: rgba(0,0,0,.45);
+  }
+  
+  .history__sheet {
+    width: min(92vw, 380px);
+    margin: auto;
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    overflow: hidden;
+  }
+  
+  .history__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  
+  .history__header h3 { 
+    margin: 0; 
+    font-size: 16px; 
+  }
+  
+  .history__actions { 
+    display: flex; gap: 8px; margin: 0;
+  }
+  
+  .history__actions button {
+    appearance: none;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .history__clear { background: #ef4444; color: #fff; }
+  .history__close { background: var(--screen); color: var(--text); }
+  
+  .history__list {
+    list-style: none; 
+    margin: 0; 
+    padding: 6px 6px 8px;
+    max-height: 50vh; 
+    overflow: auto;
+  }
+  
+  .history__list li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,.04);
+    margin: 6px;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .history__list li:hover { background: rgba(255,255,255,.08); }
+  
+  .history__expr { opacity: .9; }
+  .history__res  { font-weight: 800; }
+  
+  .history__empty {
+    padding: 16px; text-align: center; opacity: .7;
+  }
+  
+  .history__hint { 
+    padding: 10px 14px; 
+    border-top: 1px solid rgba(255,255,255,.08);
+  }

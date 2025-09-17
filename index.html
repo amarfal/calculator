@@ -13,30 +13,55 @@
 
             <div class="keys">
                 <!-- top row -->
+                 <button data-action="log" class="key key--log">PRVS</button>
                  <button data-action="clear" class="key key--alt">AC</button>
                  <button data-action="back"  class="key key--alt">⌫</button>
+
                  <button data-op="÷"         class="key key--op">÷</button>
 
                  <!-- numbers and ops grid -->
                   <button data-digit="7" class="key">7</button>
                   <button data-digit="8" class="key">8</button>
                   <button data-digit="9" class="key">9</button>
+
                   <button data-op="×"    class="key key--op">×</button>
 
                   <button data-digit="4" class="key">4</button>
                   <button data-digit="5" class="key">5</button>
                   <button data-digit="6" class="key">6</button>
+
                   <button data-op="-"    class="key key--op">-</button>
 
                   <button data-digit="1" class="key">1</button>
                   <button data-digit="2" class="key">2</button>
                   <button data-digit="3" class="key">3</button>
+
                   <button data-op="+"    class="key key--op">+</button>
 
                   <button data-digit="0" class="key key--wide">0</button>
                   <button data-dot="."   id="dotBtn" class="key">.</button>
                   <button data-action="equals" class="key key--eq">=</button>
             </div>
+
+            <dialog id="historyDlg" class="history">
+                <form method="dialog" class="history__sheet">
+                    <header class="history__header">
+                        <h3>Previous calculations</h3>
+                        <menu class="history__actions">
+                            <button type="button" id="clearHistory" class="history__clear">Clear log</button>
+                            <button value="close" class="history__close">Close</button>
+                        </menu>
+                    </header>
+              
+                    <ul id="historyList" class="history__list">
+                        <!-- filled by JS -->
+                    </ul>
+              
+                    <footer class="history__hint">
+                        <small>Tip: click a row to put the result back on the display.</small>
+                    </footer>
+                </form>
+            </dialog>
         </div>
         
         <script src="script.js"></script>

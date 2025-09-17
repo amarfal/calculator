@@ -44,23 +44,21 @@
             </div>
 
             <dialog id="historyDlg" class="history">
-                <form method="dialog" class="history__sheet">
-                    <header class="history__header">
+                <div class="history__sheet">
+                    <div class="history__header">
                         <h3>Previous calculations</h3>
-                        <menu class="history__actions">
-                            <button type="button" id="clearHistory" class="history__clear">Clear log</button>
-                            <button value="close" class="history__close">Close</button>
-                        </menu>
-                    </header>
+                        <div class="history__actions">
+                            <button id="clearHistory" class="history__clear">Clear</button>
+                            <button class="history__close" onclick="this.closest('dialog').close()">Close</button>
+                        </div>
+                    </div>
               
                     <ul id="historyList" class="history__list">
-                        <!-- filled by JS -->
+                        <li class="history__empty">No history yet...</li>
                     </ul>
               
-                    <footer class="history__hint">
-                        <small>Tip: click a row to put the result back on the display.</small>
-                    </footer>
-                </form>
+                    <div class="history__hint"><small>Click a row to send its result to the display.</small></div>
+                </div>
             </dialog>
         </div>
         

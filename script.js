@@ -25,6 +25,7 @@ function formatNumber(n) {
 }
 
 const displayEl = document.getElementById('display');
+const equationEl = document.getElementById('equation');
 const keys = document.querySelector('.keys');
 const dotBtn = document.getElementById('dotBtn');
 
@@ -35,11 +36,10 @@ let justEvaluated = false;
 
 let displayValue = '0';
 let equationDisplay = '';
-let showingEquation = false;
 
 function updateDisplay() {
-    const displayText = showingEquation ? equationDisplay : displayValue;
-    displayEl.textContent = displayText;
+    displayEl.textContent = displayValue;
+    equationEl.textContent = equationDisplay;
     const canDot = !String(displayValue).includes('.');
     dotBtn.disabled = !canDot;
     dotBtn.style.opacity = canDot ? '1' : '.6';
@@ -52,7 +52,6 @@ function clearAll() {
     justEvaluated = false;
     displayValue = '0';
     equationDisplay = '';
-    showingEquation = false;
     updateDisplay();
 }
 
@@ -61,7 +60,6 @@ function inputDigit(d) {
         first = null; operator = null; justEvaluated = false;
         displayValue = '0';
         equationDisplay = '';
-        showingEquation = false;
     }
     if (waitingForSecond) {
         displayValue = '0';
@@ -73,17 +71,9 @@ function inputDigit(d) {
     
     // Update equation display
     if (first !== null && operator !== null) {
-        const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
-        if (buildingEquation.length > 16) {
-            displayValue = "I can't do that :(";
-            showingEquation = false;
-            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-        } else {
-            equationDisplay = buildingEquation;
-            showingEquation = true;
-        }
+        equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
     } else {
-        showingEquation = false;
+        equationDisplay = '';
     }
     updateDisplay();
 }
@@ -98,17 +88,9 @@ function inputDot() {
         
         // Update equation display
         if (first !== null && operator !== null) {
-            const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
-            if (buildingEquation.length > 16) {
-                displayValue = "I can't do that :(";
-                showingEquation = false;
-                first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-            } else {
-                equationDisplay = buildingEquation;
-                showingEquation = true;
-            }
+            equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
         } else {
-            showingEquation = false;
+            equationDisplay = '';
         }
         updateDisplay();
     }
@@ -118,15 +100,7 @@ function setOperator(op) {
     if (operator && waitingForSecond) {
         operator = op;
         // Update equation display with new operator
-        const operatorEquation = `${formatNumber(first)} ${op}`;
-        if (operatorEquation.length > 16) {
-            displayValue = "I can't do that :(";
-            showingEquation = false;
-            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-        } else {
-            equationDisplay = operatorEquation;
-            showingEquation = true;
-        }
+        equationDisplay = `${formatNumber(first)} ${op}`;
         updateDisplay();
         return;
     }
@@ -138,24 +112,14 @@ function setOperator(op) {
     } else if (!waitingForSecond) {
         const result = operate(operator, first, current);
         if (result === 'DIV0') {
-            displayValue = 'Nice try :)'
-            showingEquation = false;
+            displayValue = 'Nice try :)';
+            equationDisplay = '';
             updateDisplay();
-
             first = null; operator = null; waitingForSecond = false; justEvaluated = true;
             return;
         }
         first = result;
-        const formattedResult = formatNumber(result);
-        if (formattedResult.length > 15) {
-            displayValue = "I can't do that :(";
-            showingEquation = false;
-            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-            updateDisplay();
-            return;
-        } else {
-            displayValue = formattedResult;
-        }
+        displayValue = formatNumber(result);
     }
 
     operator = op;
@@ -163,15 +127,7 @@ function setOperator(op) {
     justEvaluated = false;
     
     // Show equation with operator
-    const operatorEquation = `${formatNumber(first)} ${op}`;
-    if (operatorEquation.length > 16) {
-        displayValue = "I can't do that :(";
-        showingEquation = false;
-        first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-    } else {
-        equationDisplay = operatorEquation;
-        showingEquation = true;
-    }
+    equationDisplay = `${formatNumber(first)} ${op}`;
     updateDisplay();
 }
 
@@ -185,27 +141,13 @@ function equals() {
 
     if (result === 'DIV0') {
         displayValue = 'Nice try :)';
-        showingEquation = false;
+        equationDisplay = '';
     } else {
         const formattedResult = formatNumber(result);
-        if (formattedResult.length > 15) {
-            displayValue = "I can't do that :(";
-            showingEquation = false;
-            first = null;
-        } else {
-            displayValue = formattedResult;
-            first = result;
-            // Show complete equation with result
-            const fullEquation = `${expr} = ${formattedResult}`;
-            if (fullEquation.length > 16) {
-                displayValue = "I can't do that :(";
-                showingEquation = false;
-                first = null;
-            } else {
-                equationDisplay = fullEquation;
-                showingEquation = true;
-            }
-        }
+        displayValue = formattedResult;
+        first = result;
+        // Show complete equation above the result
+        equationDisplay = `${expr} =`;
     }
 
     operator = null;
@@ -225,17 +167,9 @@ function backspace() {
     
     // Update equation display if we're in the middle of an equation
     if (first !== null && operator !== null) {
-        const buildingEquation = `${formatNumber(first)} ${operator} ${displayValue}`;
-        if (buildingEquation.length > 16) {
-            displayValue = "I can't do that :(";
-            showingEquation = false;
-            first = null; operator = null; waitingForSecond = false; justEvaluated = true;
-        } else {
-            equationDisplay = buildingEquation;
-            showingEquation = true;
-        }
+        equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
     } else {
-        showingEquation = false;
+        equationDisplay = '';
     }
     updateDisplay();
 }

@@ -69,7 +69,7 @@ function inputDigit(d) {
     if (displayValue.length >= 16) return;
     displayValue += d;
     
-    // Update equation display
+    // update equation display
     if (first !== null && operator !== null) {
         equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
     } else {
@@ -86,7 +86,7 @@ function inputDot() {
     if (!displayValue.includes('.')) {
         displayValue += (displayValue === '' ? '0.' : '.');
         
-        // Update equation display
+        // update equation display
         if (first !== null && operator !== null) {
             equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
         } else {
@@ -99,7 +99,7 @@ function inputDot() {
 function setOperator(op) {
     if (operator && waitingForSecond) {
         operator = op;
-        // Update equation display with new operator
+        // update equation display with new operator
         equationDisplay = `${formatNumber(first)} ${op}`;
         updateDisplay();
         return;
@@ -146,7 +146,7 @@ function equals() {
         const formattedResult = formatNumber(result);
         displayValue = formattedResult;
         first = result;
-        // Show complete equation above the result
+        // show complete equation above the result
         equationDisplay = `${expr} =`;
     }
 
@@ -165,7 +165,7 @@ function backspace() {
     if (displayValue.length <= 1) displayValue = '0';
     else displayValue = displayValue.slice(0, -1);
     
-    // Update equation display if we're in the middle of an equation
+    // update equation display if we're in the middle of an equation
     if (first !== null && operator !== null) {
         equationDisplay = `${formatNumber(first)} ${operator} ${displayValue}`;
     } else {
